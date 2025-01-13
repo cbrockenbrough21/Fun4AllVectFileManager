@@ -1,0 +1,8 @@
+*.root
+*.log
+*.tmp
+*.swp
+
+# Ignore all directories named 'build' and 'inst' anywhere
+build/
+inst/
