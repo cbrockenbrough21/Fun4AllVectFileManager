@@ -1,3 +1,8 @@
+## Acknowledgments
+
+This project is a fork of https://github.com/forhadnmsu/Fun4AllVectFileManager by Forhad Hossain. Their work on vector ROOT file handling serves as the foundation for this project.
+
+
 ## Fun4AllVectEventInputManager
 The `Fun4AllVectEventInputManager` is an input file manager in the Fun4All framework, designed to manage and register various types of input data from a simple vector-based ROOT file, such as triggers, hits, and event information, into the framework's event processing system.
 
