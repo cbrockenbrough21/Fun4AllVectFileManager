@@ -2,6 +2,7 @@
 *.log
 *.tmp
 *.swp
+*.csv
 
 # Ignore all directories named 'build' and 'inst' anywhere
 build/

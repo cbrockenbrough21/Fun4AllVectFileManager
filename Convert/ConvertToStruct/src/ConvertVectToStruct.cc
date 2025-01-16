@@ -1,4 +1,5 @@
-#include "StructWrite.h"
+#include "ConvertVectToStruct.h"
+#include "StructDef.h"
 #include <iostream>
 #include <TFile.h>
 #include <TTree.h>

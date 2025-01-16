@@ -1,11 +1,10 @@
-#ifndef STRUCT_WRITE_H
-#define STRUCT_WRITE_H
+#ifndef CONVERT_VECT_TO_STRUCT_H
+#define CONVERT_VECT_TO_STRUCT_H
 
 #include <vector>
-#include "TreeData.h"  // Include TreeData for HitData and HitList
-#include <TFile.h>  // Include for TFile
-#include <TTree.h>  // Include for TTree
-#include "TreeData.h"  // Include your TreeData header
+#include <TFile.h>  
+#include <TTree.h>
+#include "StructDef.h" 
 
 // StructWrite class to manage event-level data
 class StructWrite {
