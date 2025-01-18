@@ -1,5 +1,5 @@
-#ifndef VECTORWRITE_H
-#define VECTORWRITE_H
+#ifndef VECTORREWRITE_H
+#define VECTORREWRITE_H
 
 #include <iostream>
 #include <TFile.h>

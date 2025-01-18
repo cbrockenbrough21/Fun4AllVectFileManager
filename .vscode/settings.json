@@ -49,5 +49,6 @@
         "streambuf": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/project/ptgroup/Catherine/Fun4AllVectFileManager/Fun4AllVectFileManager/src"
 }
