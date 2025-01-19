@@ -4,9 +4,7 @@
 #include <TFile.h>
 #include <TTree.h>
 #include <TStopwatch.h>
-#include <TMatrixD.h>
 #include <fstream>
-#include <ROOT/RDataFrame.hxx>
 
 using namespace std;
 
@@ -55,32 +53,35 @@ void StructWrite::OpenFile(const std::string &file_name, TFile *&m_file, TTree *
     // m_tree->SetBasketSize("*", m_basket_size);
 }
 
-// Example of filling data and writing to file
 int main(int argc, char *argv[]) {
-    if (argc != 5) {
-        cerr << "Usage: " << argv[0] << " <compression_algo> <compression_level> <basket_size> <autoflush>" << endl;
+    if (argc != 3) {
+        cerr << "Usage: " << argv[0] << " <input_file> <output_file>" << endl;
         return 1;
     }
 
-    // Get compression parameters from command-line arguments
-    int compression_algo = atoi(argv[1]);
-    int compression_level = atoi(argv[2]);
-    int basket_size = atoi(argv[3]);
-    Long64_t autoflush = atoll(argv[4]); // AutoFlush setting (0 means disabled)
+    // Get file names from command-line arguments
+    string input_file_path = argv[1];
+    string output_file_path = argv[2];
 
     StructWrite writer;
-    writer.compression_algo = compression_algo;
-    writer.compression_level = compression_level;
-    writer.m_basket_size = basket_size;
-    writer.m_auto_flush = autoflush;
 
     TFile *m_file = nullptr;
     TTree *m_tree = nullptr;
 
-    writer.OpenFile("struct_sim.root", m_file, m_tree);
 
-    TFile *file = TFile::Open("../../Vector-In.root");
+    writer.OpenFile(output_file_path, m_file, m_tree);
+
+    TFile *file = TFile::Open(input_file_path.c_str());
+    if (!file || file->IsZombie()) {
+        cerr << "Error: Could not open input file " << input_file_path << endl;
+        return 1;
+    }
+
     TTree *tree = (TTree *)file->Get("tree");
+    if (!tree) {
+        cerr << "Error: Could not find TTree in input file " << input_file_path << endl;
+        return 1;
+    }
 
     int run_id, spill_id, event_id, fpga_bits[5], nim_bits[5];
     std::vector<int>* detector_id = nullptr, *element_id = nullptr;

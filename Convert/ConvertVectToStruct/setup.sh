@@ -6,6 +6,8 @@ source /project/ptgroup/spinquest/this-e1039.sh
 #source /exp/seaquest/app/software/osg/software/e1039/this-e1039.sh
 #source /exp/seaquest/app/software/osg/users/$USER/e1039/core/this-e1039.sh
 export LD_LIBRARY_PATH=$DIR_INST/lib:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/project/ptgroup/Catherine/Fun4AllVectFileManager/StructDef/inst/lib:$LD_LIBRARY_PATH
+
 
 function cmake-this {
     if [ -e $DIR_BUILD ] ; then

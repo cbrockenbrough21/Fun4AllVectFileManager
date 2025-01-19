@@ -43,3 +43,10 @@ target_link_libraries(Struct_Def ${ROOT_LINK})
 # Install header files and library
 install(FILES StructDef.h DESTINATION include)
 install(TARGETS Struct_Def DESTINATION lib)
+
+# Install the PCM file for ROOT 6
+execute_process(COMMAND root-config --version OUTPUT_VARIABLE ROOT_VER)
+string(SUBSTRING ${ROOT_VER} 0 1 ROOT_VER)
+if (ROOT_VER GREATER 5)
+    install(FILES ${CMAKE_BINARY_DIR}/StructDef_Dict_rdict.pcm DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+endif()

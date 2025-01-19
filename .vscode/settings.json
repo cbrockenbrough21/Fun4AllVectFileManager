@@ -48,7 +48,8 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "ConvertVectToStruct.C": "cpp"
     },
     "cmake.sourceDirectory": "/project/ptgroup/Catherine/Fun4AllVectFileManager/Fun4AllVectFileManager/src"
 }
