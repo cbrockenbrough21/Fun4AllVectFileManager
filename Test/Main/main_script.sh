@@ -9,10 +9,14 @@ ROOT_DIR="/project/ptgroup/Catherine/Fun4AllVectFileManager"
 # Ensure logs and results directories exist
 mkdir -p "$BASE_DIR/logs"
 mkdir -p "$BASE_DIR/results"
+mkdir -p "$BASE_DIR/Struct"
 
 # Configuration
-VECTOR_FILES=("/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/run_002281_spill_000000000_spin_vector.root")
+VECTOR_FILES=("/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/run_002281_spill_000000000_spin_vector.root" "/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/run_002282_spill_000000000_spin_vector.root" "/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/run_002283_spill_000000000_spin_vector.root")
 REWRITE_TYPES=("Struct" "Vector")  # Types of rewrite (StructRewrite, VectorRewrite)
+
+# Combined results CSV file
+COMBINED_CSV="$BASE_DIR/results/combined_results.csv"
 
 # Parameters for testing
 BASKET_SIZES=(32000)
@@ -65,6 +69,10 @@ run_rewrite_tests() {
           [[ -z "$write_time" ]] && write_time="ERROR"
 
           echo "$algo,$level,$basket_size,$autoflush,$file_size,$write_time" >> "$csv_file"
+
+          # Append results to the combined CSV
+          echo "$input_file,$rewrite_type,$algo,$level,$basket_size,$autoflush,$file_size,$write_time" >> "$COMBINED_CSV"
+
         done
       done
     done
@@ -101,17 +109,17 @@ for vector_file in "${VECTOR_FILES[@]}"; do
     base_name_without_vector="${base_name%_vector}"
 
     # Generate Struct file path
-    struct_file="$BASE_DIR/results/${base_name_without_vector}_struct.root"
+    struct_file="$BASE_DIR/Struct/${base_name_without_vector}_struct.root"
 
     # Run ConvertVectToStruct
     "$CONVERT_TO_STRUCT" "$vector_file" "$struct_file"
 
     # Run VectorRewrite tests
-    run_rewrite_tests "Vector" "$vector_file" "$BASE_DIR/results/${base_name}_rewritten.root" \
+    run_rewrite_tests "Vector" "$vector_file" "$BASE_DIR/Vector/${base_name}_rewritten.root" \
     "$BASE_DIR/logs/${base_name}_vector_log.txt" "$BASE_DIR/results/${base_name}_results.csv"
 
     # Run StructRewrite tests
-    run_rewrite_tests "Struct" "$struct_file" "$BASE_DIR/results/${base_name_without_vector}_struct_rewritten.root" \
+    run_rewrite_tests "Struct" "$struct_file" "$BASE_DIR/Struct/${base_name_without_vector}_struct_rewritten.root" \
     "$BASE_DIR/logs/${base_name_without_vector}_struct_log.txt" "$BASE_DIR/results/${base_name_without_vector}_struct_results.csv"
 done
 
