@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
     double real_time = timer.RealTime();
 
     // Get the file size
-    std::uintmax_t file_size = getFileSize("struct_sim.root");
+    std::uintmax_t file_size = getFileSize(output_file_path);
 
     // Print out the file size and write time in the expected format
     cout << "WRITE_TIME=" << real_time << " FILE_SIZE=" << fixed << setprecision(3) 
