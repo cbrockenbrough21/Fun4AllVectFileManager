@@ -61,8 +61,6 @@ int main(int argc, char *argv[]) {
     TTree *output_tree = new TTree("tree", "Tree for storing events");
     output_file->SetCompressionAlgorithm(compression_algo);
     output_file->SetCompressionLevel(compression_level);
-    // output_tree->SetAutoFlush(autoflush);
-    // output_tree->SetBasketSize("*", basket_size);
 
     // THIS is the StructRewrite object (Option B)
     StructRewrite writer;
@@ -71,6 +69,9 @@ int main(int argc, char *argv[]) {
     output_tree->Branch("evt", &writer.evt);
     output_tree->Branch("list_hit", &writer.list_hit);
     output_tree->Branch("list_trigger_hit", &writer.list_trigger_hit);
+
+    output_tree->SetAutoFlush(autoflush);
+    output_tree->SetBasketSize("*", basket_size);
 
     // Loop over input entries
     Long64_t nentries = input_tree->GetEntries();
