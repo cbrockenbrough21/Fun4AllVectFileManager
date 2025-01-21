@@ -18,9 +18,23 @@ REWRITE_TYPES=("Struct" "Vector")  # Types of rewrite (StructRewrite, VectorRewr
 # Combined results CSV file
 COMBINED_CSV="$BASE_DIR/results/combined_results.csv"
 
+# Check if --reset flag is provided
+RESET=false
+if [[ "$1" == "--reset" ]]; then
+  RESET=true
+fi
+
+# Reset or append to the combined results CSV
+if $RESET; then
+  echo "Resetting combined results file..."
+  echo "File Name,Rewrite Type,Algorithm,Compression Level,Basket Size,AutoFlush,File Size (MB),Write Time (s)" > "$COMBINED_CSV"
+else
+  echo "Appending to existing combined results file..."
+fi
+
 # Parameters for testing
-BASKET_SIZES=(32000)
-AUTOFLUSH_VALUES=(0)
+BASKET_SIZES=(32000 64000)
+AUTOFLUSH_VALUES=(0 2500 5000)
 
 # Paths to executables
 CONVERT_TO_STRUCT="$ROOT_DIR/Convert/ConvertVectToStruct/maker/ConvertVectToStruct"
@@ -35,6 +49,11 @@ run_rewrite_tests() {
   local log_file=$4
   local csv_file=$5
   local rewrite_executable
+  
+  # Extract the base file name (without the path)
+  local base_name=$(basename "$input_file")
+  base_name=${base_name%_vector}
+  base_name=${base_name%_struct}  
 
   # Determine executable based on rewrite type
   if [[ "$rewrite_type" == "Vector" ]]; then
@@ -51,7 +70,7 @@ run_rewrite_tests() {
 
   echo "Algorithm,Compression Level,Basket Size,AutoFlush,File Size (MB),Write Time (s)" >> "$csv_file"
 
-  # Algo 1: Levels 5, 6, 7
+  Algo 1: Levels 5, 6, 7
   for algo in 1; do
     for level in 5 6 7; do
       for basket_size in "${BASKET_SIZES[@]}"; do
@@ -70,8 +89,8 @@ run_rewrite_tests() {
 
           echo "$algo,$level,$basket_size,$autoflush,$file_size,$write_time" >> "$csv_file"
 
-          # Append results to the combined CSV
-          echo "$input_file,$rewrite_type,$algo,$level,$basket_size,$autoflush,$file_size,$write_time" >> "$COMBINED_CSV"
+          # Append results to the combined CSV with the base name
+          echo "$base_name,$rewrite_type,$algo,$level,$basket_size,$autoflush,$file_size,$write_time" >> "$COMBINED_CSV"
 
         done
       done
@@ -96,6 +115,10 @@ run_rewrite_tests() {
           [[ -z "$write_time" ]] && write_time="ERROR"
 
           echo "$algo,$level,$basket_size,$autoflush,$file_size,$write_time" >> "$csv_file"
+
+          # Append results to the combined CSV with the base name
+          echo "$base_name,$rewrite_type,$algo,$level,$basket_size,$autoflush,$file_size,$write_time" >> "$COMBINED_CSV"
+
         done
       done
     done
