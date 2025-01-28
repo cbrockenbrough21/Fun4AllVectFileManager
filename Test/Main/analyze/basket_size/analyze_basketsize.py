@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the combined results CSV
-df = pd.read_csv("combined_results.csv")  # Replace with your file path
+df = pd.read_csv("../combined_results.csv")  # Replace with your file path
 
 # Group data by parameters excluding Basket Size
 grouped = df.groupby(
@@ -63,4 +63,3 @@ plt.tight_layout()
 
 # Save and show the plot
 plt.savefig("basket_size_comparison.png")
-plt.show()

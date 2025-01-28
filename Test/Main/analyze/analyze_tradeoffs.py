@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 file_path = "combined_results.csv"  # Replace with your combined CSV file path
 df = pd.read_csv(file_path)
 
+
 # Filter for the baseline (algo 1, level 5, basket size 32000, autoflush 0)
 baseline = df[
     (df["Algorithm"] == 1) &
@@ -12,6 +13,9 @@ baseline = df[
     (df["Basket Size"] == 32000) &
     (df["AutoFlush"] == 0)
 ]
+
+duplicates = baseline[baseline.duplicated(subset="File Name", keep=False)]
+print(duplicates)
 
 # Ensure there is only one baseline per file
 baseline_dict = baseline.set_index("File Name")[["Write Time (s)", "File Size (MB)"]].to_dict("index")

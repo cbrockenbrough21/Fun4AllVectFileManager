@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load the combined results CSV
-file_path = "combined_results.csv"  # Replace with your file path
+file_path = "../combined_results.csv"  # Replace with your file path
 df = pd.read_csv(file_path)
 
 # Filter for a specific rewrite type if needed (e.g., "Vector" or "Struct")
