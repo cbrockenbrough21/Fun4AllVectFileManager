@@ -108,14 +108,6 @@ int main(int argc, char *argv[]) {
     // 6. Create an output TTree with the same branch structure
     TTree* output_tree = new TTree("tree", "Rewritten TTree");
 
-    // If you want to apply basket size and autoflush:
-    if (autoflush != 0) {
-        output_tree->SetAutoFlush(autoflush);
-    }
-    // Setting basket size for all branches requires looping over them 
-    // after they are created. But we'll do it by name (or wildcard approach won't work):
-    // (We'll do it after we create them)
-
     // Basic scalar branches
     output_tree->Branch("runID",         &runID,       "runID/I");
     output_tree->Branch("spillID",       &spillID,     "spillID/I");
@@ -141,16 +133,10 @@ int main(int argc, char *argv[]) {
     output_tree->Branch("triggerDriftDistances", &triggerDriftDistances);
     output_tree->Branch("triggerHitsInTime",     &triggerHitsInTime);
 
-    // Optionally set basket size for each branch by name:
-    // output_tree->SetBasketSize("runID", basket_size);
-    // output_tree->SetBasketSize("rfIntensities", basket_size);
-    // etc...
-    // Or loop over all branches after they are created:
-    //   TObjArray* branchList = output_tree->GetListOfBranches();
-    //   for (int iBr = 0; iBr < branchList->GetEntries(); iBr++) {
-    //       TBranch* br = (TBranch*) branchList->At(iBr);
-    //       br->SetBasketSize(basket_size);
-    //   }
+    if (autoflush != 0){
+        output_tree->SetAutoFlush(autoflush);
+    }
+    output_tree->SetBasketSize("*", basket_size);
 
     // 7. Loop over the input TTree entries and fill the output TTree
     Long64_t nEntries = input_tree->GetEntries();

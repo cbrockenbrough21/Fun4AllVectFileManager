@@ -70,7 +70,9 @@ int main(int argc, char *argv[]) {
     output_tree->Branch("list_hit", &writer.list_hit);
     output_tree->Branch("list_trigger_hit", &writer.list_trigger_hit);
 
-    output_tree->SetAutoFlush(autoflush);
+    if (autoflush != 0){
+        output_tree->SetAutoFlush(autoflush);
+    }
     output_tree->SetBasketSize("*", basket_size);
 
     // Loop over input entries
