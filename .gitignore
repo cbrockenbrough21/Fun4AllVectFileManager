@@ -3,6 +3,8 @@
 *.tmp
 *.swp
 *.csv
+*.txt
+*.png
 
 # Ignore all directories named 'build' and 'inst' anywhere
 build/
