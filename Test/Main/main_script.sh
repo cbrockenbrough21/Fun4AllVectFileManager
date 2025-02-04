@@ -12,7 +12,7 @@ mkdir -p "$BASE_DIR/results"
 mkdir -p "$BASE_DIR/Struct"
 
 # Configuration
-VECTOR_FILES=("/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/run_002281_spill_000000000_spin_vector.root" "/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/run_002282_spill_000000000_spin_vector.root" "/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/run_002283_spill_000000000_spin_vector.root")
+VECTOR_FILES=("/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/large_combined_file.root")
 REWRITE_TYPES=("Struct" "Vector")  # Types of rewrite (StructRewrite, VectorRewrite)
 
 # Combined results CSV file
@@ -70,7 +70,7 @@ run_rewrite_tests() {
 
   echo "Algorithm,Compression Level,Basket Size,AutoFlush,File Size (MB),Write Time (s)" >> "$csv_file"
 
-  Algo 1: Levels 5, 6, 7
+  #Algo 1: Levels 5, 6, 7
   for algo in 1; do
     for level in 5 6 7; do
       for basket_size in "${BASKET_SIZES[@]}"; do
