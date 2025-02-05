@@ -13,6 +13,7 @@ class PHCompositeNode;
 class SQEvent;
 class SQSpillMap;
 class SQHitVector;
+class SQRun;
 
 
 class Fun4AllVectEventOutputManager : public Fun4AllOutputManager {
@@ -51,30 +52,65 @@ private:
     TTree* m_tree;
 
     SQEvent* m_evt;
+    SQRun* m_run;
     SQSpillMap* m_sp_map;
     SQHitVector* m_hit_vec;
     SQHitVector* m_trig_hit_vec;
 
-int runID;
-int spillID;
-int eventID;
-int rfID;
-int turnID;
-int rfIntensities[33];
-int fpgaTriggers[5] = {0};
-int nimTriggers[5] = {0};
+   // -------------------------------
+    // SQRun Variables
+    // -------------------------------
+    int runID;
+    int n_spill;
+    int n_evt_all;
+    int n_evt_dec;
+    int n_phys_evt;
+    int n_phys_evt_bad;
+    int n_flush_evt;
+    int n_flush_evt_bad;
+    int n_hit;
+    int n_t_hit;
 
-std::vector<int> detectorIDs;
-std::vector<int> elementIDs;
-std::vector<double> tdcTimes;
-std::vector<double> driftDistances;
-std::vector<bool> hitsInTime;
+    // -------------------------------
+    // SQEvent Variables
+    // -------------------------------
+    int spillID;
+    int eventID;
+    int rfID;
+    int turnID;
+    int rfIntensities[33];
+    int fpgaTriggers[5] = {0};
+    int nimTriggers[5] = {0};
 
-std::vector<int> triggerDetectorIDs;
-std::vector<int> triggerElementIDs;
-std::vector<double> triggerTdcTimes;
-std::vector<double> triggerDriftDistances;
-std::vector<bool> triggerHitsInTime;
+    int trigger_input;
+
+    // -------------------------------
+    // SQHit Variables
+    // -------------------------------
+    std::vector<int> hitIDs;
+    std::vector<int> trackIDs;
+    std::vector<int> detectorIDs;
+    std::vector<int> elementIDs;
+    std::vector<double> tdcTimes;
+    std::vector<double> driftDistances;
+    std::vector<bool> hitsInTime;
+
+    std::vector<bool> hodo_mask;
+    std::vector<bool> trigger_mask;
+    std::vector<double> truth_x;
+    std::vector<double> truth_y;
+    std::vector<double> truth_z;
+    std::vector<double> truth_px;
+    std::vector<double> truth_py;
+    std::vector<double> truth_pz;
+
+    std::vector<std::map<short, float>> hit_cells;
+
+    std::vector<int> triggerDetectorIDs;
+    std::vector<int> triggerElementIDs;
+    std::vector<double> triggerTdcTimes;
+    std::vector<double> triggerDriftDistances;
+    std::vector<bool> triggerHitsInTime;
 
 };
 
