@@ -2,10 +2,12 @@
 #define _FUN4ALL_UNIVERSAL_OUTPUT_MANAGER__H_
 
 #include <fun4all/Fun4AllOutputManager.h>
+#include <interface_main/SQRun.h>
 #include <string>
 #include <vector>
 #include <map>
 #include <TStopwatch.h>
+
 
 class TFile;
 class TTree;

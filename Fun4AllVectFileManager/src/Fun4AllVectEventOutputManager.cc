@@ -9,6 +9,7 @@
 #include <phool/getClass.h>
 #include <phool/PHNode.h>
 #include <phool/PHNodeIOManager.h>
+#include <fun4all/Fun4AllServer.h> 
 #include <interface_main/SQEvent.h>
 #include <interface_main/SQRun.h>
 #include <interface_main/SQSpillMap.h>
@@ -17,19 +18,50 @@
 #include <ktracker/SRecEvent.h>
 #include <fun4all/Fun4AllReturnCodes.h>
 #include "Fun4AllVectEventOutputManager.h"
+#include <phool/PHNodeIterator.h>
+#include <phool/PHCompositeNode.h>
+#include <phool/PHIODataNode.h>
+#include <phool/getClass.h>
+#include <interface_main/SQRun_v1.h>
+
 using namespace std;
 
 Fun4AllVectEventOutputManager::Fun4AllVectEventOutputManager(const std::string &myname)
   : Fun4AllOutputManager(myname),
-    m_file(0),
-    m_tree(0),
+    m_file(nullptr),
+    m_tree(nullptr),
     m_tree_name("tree"),
     m_file_name("output.root"),
-    m_evt(0),
-    m_sp_map(0),
-    m_hit_vec(0)
+    m_evt(nullptr),
+    m_sp_map(nullptr),
+    m_hit_vec(nullptr),
+    m_run(nullptr)  // Initialize SQRun pointer
 {
- ;
+    // Get the top node from Fun4AllServer
+    Fun4AllServer* se = Fun4AllServer::instance();
+    PHCompositeNode* topNode = se->topNode("TOP");
+
+    // Create an iterator to search for the "RUN" node
+    PHNodeIterator iter(topNode);
+
+    // Try to find or create the "RUN" node
+    PHCompositeNode* runNode = static_cast<PHCompositeNode*>(iter.findFirst("PHCompositeNode", "RUN"));
+    if (!runNode) {
+        std::cout << "[Fun4AllVectEventOutputManager] RUN node not found. Creating a new RUN node." << std::endl;
+        runNode = new PHCompositeNode("RUN");
+        topNode->addNode(runNode);
+    }
+
+    // Try to find SQRun in the node tree
+    m_run = findNode::getClass<SQRun>(runNode, "SQRun");
+    if (!m_run) {
+        std::cout << "[Fun4AllVectEventOutputManager] SQRun not found! Creating a new SQRun_v1 object." << std::endl;
+        m_run = new SQRun_v1();
+
+        // Attach it to the RUN node
+        PHIODataNode<PHObject>* runHeaderNode = new PHIODataNode<PHObject>(m_run, "SQRun", "PHObject");
+        runNode->addNode(runHeaderNode);
+    }
 }
 
 Fun4AllVectEventOutputManager::~Fun4AllVectEventOutputManager() {
@@ -105,16 +137,15 @@ int Fun4AllVectEventOutputManager::OpenFile(PHCompositeNode* startNode) {
     m_tree->Branch("triggerHitsInTime", &triggerHitsInTime);
 
     m_evt = findNode::getClass<SQEvent>(startNode, "SQEvent");
-    m_run = findNode::getClass<SQRun>(startNode, "SQRun");
     m_hit_vec = findNode::getClass<SQHitVector>(startNode, "SQHitVector");
     m_trig_hit_vec = findNode::getClass<SQHitVector>(startNode, "SQTriggerHitVector");
 
     if (!m_evt || !m_hit_vec || !m_trig_hit_vec) return Fun4AllReturnCodes::ABORTEVENT;
- return Fun4AllReturnCodes::EVENT_OK;
+    return Fun4AllReturnCodes::EVENT_OK;
 }
 int Fun4AllVectEventOutputManager::Write(PHCompositeNode* startNode) {
-    if (!m_file || !m_tree) {
-        OpenFile(startNode);
+        if (!m_file || !m_tree) {
+                OpenFile(startNode);
     }
     ResetBranches();
     runID = m_evt->get_run_id();
@@ -123,19 +154,23 @@ int Fun4AllVectEventOutputManager::Write(PHCompositeNode* startNode) {
     eventID = m_evt->get_event_id();
     turnID = m_evt->get_qie_turn_id();
     
-	fpgaTriggers[0] = m_evt->get_trigger(SQEvent::MATRIX1);
+    fpgaTriggers[0] = m_evt->get_trigger(SQEvent::MATRIX1);
     fpgaTriggers[1] = m_evt->get_trigger(SQEvent::MATRIX2);
     fpgaTriggers[2] = m_evt->get_trigger(SQEvent::MATRIX3);
-	fpgaTriggers[3] = m_evt->get_trigger(SQEvent::MATRIX4);
-	fpgaTriggers[4] = m_evt->get_trigger(SQEvent::MATRIX5);
+    fpgaTriggers[3] = m_evt->get_trigger(SQEvent::MATRIX4);
+    fpgaTriggers[4] = m_evt->get_trigger(SQEvent::MATRIX5);
     
-	nimTriggers[0] = m_evt->get_trigger(SQEvent::NIM1);
+    nimTriggers[0] = m_evt->get_trigger(SQEvent::NIM1);
     nimTriggers[1] = m_evt->get_trigger(SQEvent::NIM2);
     nimTriggers[2] = m_evt->get_trigger(SQEvent::NIM3);
     nimTriggers[3] = m_evt->get_trigger(SQEvent::NIM4);
     nimTriggers[4] = m_evt->get_trigger(SQEvent::NIM5);
 
-    // SQRun Variables
+    if (!m_run) {
+        std::cerr << "Error: m_run is nullptr" << std::endl;
+        return Fun4AllReturnCodes::ABORTEVENT;
+    }
+    
     n_spill = m_run->get_n_spill();
     n_evt_all = m_run->get_n_evt_all();
     n_evt_dec = m_run->get_n_evt_dec();
@@ -146,10 +181,8 @@ int Fun4AllVectEventOutputManager::Write(PHCompositeNode* startNode) {
     n_hit = m_run->get_n_hit();
     n_t_hit = m_run->get_n_t_hit();
 
-
     for (int i = -16; i < 16; ++i) {
-        // cout << "intensity index: i" << i+16 << endl;
-    	rfIntensities[i + 16] = m_evt->get_qie_rf_intensity(i);
+        rfIntensities[i + 16] = m_evt->get_qie_rf_intensity(i);
     }
 
     // SQHit Variables
@@ -171,10 +204,9 @@ int Fun4AllVectEventOutputManager::Write(PHCompositeNode* startNode) {
             truth_px.push_back(hit->get_truth_px());
             truth_py.push_back(hit->get_truth_py());
             truth_pz.push_back(hit->get_truth_pz());
-
-            //  Store per-cell energy (assuming 0 index for now)
-            // hit_cells.push_back(hit->get_cell(0));  
         }
+    } else {
+        std::cerr << "Warning: m_hit_vec is nullptr" << std::endl;
     }
 
     if (m_trig_hit_vec) {
@@ -188,7 +220,16 @@ int Fun4AllVectEventOutputManager::Write(PHCompositeNode* startNode) {
         }
     }
 
+    //std::cout << "Checking m_tree before filling" << std::endl;
+    if (!m_tree) {
+        std::cerr << "Error: m_tree is nullptr before Fill()" << std::endl;
+        return Fun4AllReturnCodes::ABORTEVENT;
+    }
+
+    // std::cout << "Filling tree with eventID: " << eventID << std::endl;
     m_tree->Fill();
+
+    //std::cout << "Successfully wrote event: " << eventID << ", spill: " << spillID << std::endl;
     return 0;
 }
 
