@@ -119,6 +119,7 @@ int Fun4AllVectEventOutputManager::OpenFile(PHCompositeNode* startNode) {
     m_tree->Branch("elementIDs", &elementIDs);
     m_tree->Branch("tdcTimes", &tdcTimes);
     m_tree->Branch("driftDistances", &driftDistances);
+    m_tree->Branch("pos", &pos);
     m_tree->Branch("hitsInTime", &hitsInTime);
     m_tree->Branch("hodo_mask", &hodo_mask);
     m_tree->Branch("trigger_mask", &trigger_mask);
@@ -195,6 +196,8 @@ int Fun4AllVectEventOutputManager::Write(PHCompositeNode* startNode) {
             elementIDs.push_back(hit->get_element_id());
             tdcTimes.push_back(hit->get_tdc_time());
             driftDistances.push_back(hit->get_drift_distance());
+            pos.push_back(hit->get_pos()); 
+
             hitsInTime.push_back(hit->is_in_time());
             hodo_mask.push_back(hit->is_hodo_mask());
             trigger_mask.push_back(hit->is_trigger_mask());

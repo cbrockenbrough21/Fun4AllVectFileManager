@@ -96,6 +96,7 @@ private:
     std::vector<double> tdcTimes;
     std::vector<double> driftDistances;
     std::vector<bool> hitsInTime;
+    std::vector<double> pos; 
 
     std::vector<bool> hodo_mask;
     std::vector<bool> trigger_mask;
