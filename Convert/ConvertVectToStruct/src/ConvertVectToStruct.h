@@ -5,10 +5,18 @@
 #include <TFile.h>  
 #include <TTree.h>
 #include "StructDef.h" 
+#include <iostream>
+
+
 
 // StructWrite class to manage event-level data
 class StructWrite {
 public:
+    StructWrite() {
+        std::cout << "DEBUG: StructWrite constructor called!" << std::endl;
+    }
+
+
     // Event-level data members
     int RunID = 0;
     int SpillID = 0;
