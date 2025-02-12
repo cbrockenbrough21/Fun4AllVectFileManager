@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iomanip>
 #include <TStopwatch.h>
-R__LOAD_LIBRARY(libfun4all_vect_file_manager)
+R__LOAD_LIBRARY(/project/ptgroup/Catherine/Fun4AllVectFileManager/Fun4AllVectFileManager/inst/lib/libfun4all_vect_file_manager.so)
 R__LOAD_LIBRARY(libcalibrator)
 R__LOAD_LIBRARY(libktracker)
 
@@ -16,7 +16,7 @@ std::uintmax_t getFileSize(const std::string &filename) {
 // Main function for conversion
 void ConvertToVect() {
     // Hardcoded input file path
-    const std::string input_file = "Convert/ConvertToVect/run_002282_spill_000000000_spin.root";
+    const std::string input_file = "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/run_002483_spill_000000000_spin.root";
 
     // Derive the base name and output file name
     std::string base_name = input_file.substr(0, input_file.find_last_of("."));

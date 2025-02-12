@@ -32,6 +32,23 @@ execute_process(COMMAND root-config --libs   OUTPUT_VARIABLE ROOT_LINK    OUTPUT
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I$ENV{OFFLINE_MAIN}/include/ ${ROOT_CFLAGS}")
 
+# Set Boost path
+set(BOOST_ROOT "/apps/software/standard/compiler/gcc/11.4.0/boost/1.79.0")
+set(Boost_NO_SYSTEM_PATHS ON)
+set(Boost_NO_BOOST_CMAKE ON)
+
+# Find Boost
+find_package(Boost 1.79 REQUIRED COMPONENTS filesystem iostreams system)
+
+if(Boost_FOUND)
+    message(STATUS "Boost found at ${Boost_INCLUDE_DIRS}")
+    include_directories(${Boost_INCLUDE_DIRS})
+    link_directories(${Boost_LIBRARY_DIRS})
+    add_definitions(-DBOOST_ALL_NO_LIB)
+else()
+    message(FATAL_ERROR "Boost NOT found!")
+endif()
+
 # Build the shared library
 add_library(fun4all_vect_file_manager SHARED ${sources} fun4all_vect_file_manager_Dict.cc)
 target_link_libraries(fun4all_vect_file_manager fun4all interface_main geom_svc ktracker phg4hit PHPythia8 g4detectors UtilAna)

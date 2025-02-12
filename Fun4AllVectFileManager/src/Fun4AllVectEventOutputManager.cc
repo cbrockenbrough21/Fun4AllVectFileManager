@@ -280,6 +280,7 @@ void Fun4AllVectEventOutputManager::ResetBranches() {
     elementIDs.clear();
     tdcTimes.clear();
     driftDistances.clear();
+    pos.clear();
     hitsInTime.clear();
     hodo_mask.clear();
     trigger_mask.clear();
