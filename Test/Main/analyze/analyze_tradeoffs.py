@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 file_path = "combined_results.csv"  # Replace with your combined CSV file path
 df = pd.read_csv(file_path)
 
-
 # Filter for the baseline (algo 1, level 5, basket size 32000, autoflush 0)
 baseline = df[
     (df["Algorithm"] == 1) &
@@ -13,9 +12,6 @@ baseline = df[
     (df["Basket Size"] == 32000) &
     (df["AutoFlush"] == 0)
 ]
-
-duplicates = baseline[baseline.duplicated(subset="File Name", keep=False)]
-print(duplicates)
 
 # Ensure there is only one baseline per file
 baseline_dict = baseline.set_index("File Name")[["Write Time (s)", "File Size (MB)"]].to_dict("index")
@@ -48,30 +44,51 @@ color_map = {
     (2, 5): "red",
 }
 
+# Define markers for file types
+file_markers = {
+    "Mega File": "*",  # Star for mega
+    "Large File": "D"  # Diamond for large
+}
+
+# Function to determine file marker
+def assign_marker(file_name):
+    if "mega" in file_name.lower():
+        return "*"
+    elif "large" in file_name.lower():
+        return "D"
+    else:
+        return "o"
+
 # Define a function to generate scatter plots
 def plot_tradeoffs(rewrite_type, data, output_filename):
     # Filter for the specified rewrite type
     filtered_data = data[data["Rewrite Type"] == rewrite_type].copy()
     
-    # Assign colors to each row based on algo-level pair
+    # Assign colors based on algo-level pair
     filtered_data["Color"] = filtered_data.apply(
         lambda row: color_map.get((row["Algorithm"], row["Compression Level"]), "gray"),
         axis=1
     )
 
-    # Create scatter plot
+    # Assign markers based on file type
+    filtered_data["Marker"] = filtered_data["File Name"].apply(assign_marker)
+
     plt.figure(figsize=(10, 6))
+    
+    # Plot data
     for (algo, level), color in color_map.items():
         subset = filtered_data[(filtered_data["Algorithm"] == algo) & (filtered_data["Compression Level"] == level)]
-        plt.scatter(
-            subset["%_Change_Write_Time"],
-            subset["%_Change_File_Size"],
-            label=f"Algo {algo}, Level {level}",
-            color=color,
-            alpha=0.8,
-            edgecolor="black",  # Add edge for better visibility
-            s=50  # Adjust marker size
-        )
+        for marker in subset["Marker"].unique():
+            marker_subset = subset[subset["Marker"] == marker]
+            plt.scatter(
+                marker_subset["%_Change_Write_Time"],
+                marker_subset["%_Change_File_Size"],
+                color=color,
+                alpha=0.8,
+                edgecolor="black",
+                s=50,
+                marker=marker
+            )
 
     # Add plot details
     plt.title(f"Trade-offs: % Change in Write Time vs File Size ({rewrite_type} Rewrite)", fontsize=14)
@@ -80,7 +97,19 @@ def plot_tradeoffs(rewrite_type, data, output_filename):
     plt.axhline(0, color="gray", linestyle="--", linewidth=0.8)  # Add horizontal reference line
     plt.axvline(0, color="gray", linestyle="--", linewidth=0.8)  # Add vertical reference line
     plt.grid(alpha=0.5)
-    plt.legend(title="Algo-Level Pairs", fontsize=10, title_fontsize=12, loc="best")
+
+    # **Legend: Colors for algorithm-level pairs (circle markers)**
+    handles = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=color, markersize=8, label=f"Algo {algo}, Level {level}") for (algo, level), color in color_map.items()]
+    
+    # **Legend: Shapes for file types**
+    shape_handles = [
+        plt.Line2D([0], [0], marker='*', color='w', markerfacecolor="black", markersize=10, label="Mega File"),
+        plt.Line2D([0], [0], marker='D', color='w', markerfacecolor="black", markersize=8, label="Large File")
+    ]
+    
+    # Combine legends and place in upper right corner
+    plt.legend(handles=handles + shape_handles, title="Algo-Level Pairs & File Type", fontsize=10, title_fontsize=12, loc="upper right")
+
     plt.tight_layout()
 
     # Save the plot
