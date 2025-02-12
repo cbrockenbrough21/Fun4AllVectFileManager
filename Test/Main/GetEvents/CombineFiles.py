@@ -5,7 +5,7 @@ file_5_path = "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/Convert
 file_7_path = "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/run_004062_spill_000000000_spin_vector.root"
 
 # Output file path
-output_path = "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/mega_combined_file.root"
+output_path = "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/large_combined_vect_file.root"
 
 # Open input files
 file_5 = ROOT.TFile.Open(file_5_path)
@@ -23,9 +23,9 @@ for i in range(8):
     for entry in tree_5:
         output_tree.Fill()
     
-    print("Filling tree_7 entry")
-    for entry in tree_7:
-        output_tree.Fill()
+    # print("Filling tree_7 entry")
+    # for entry in tree_7:
+    #     output_tree.Fill()
 
 # Write the combined tree to the output file
 output_tree.Write()
