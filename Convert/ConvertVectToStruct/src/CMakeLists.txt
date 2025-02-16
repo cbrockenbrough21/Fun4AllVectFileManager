@@ -53,14 +53,6 @@ add_executable(ConvertVectToStruct ConvertVectToStruct.C)
 target_link_libraries(ConvertVectToStruct
   Struct_Def
   ${ROOT_LINK}
-  fun4all
-  interface_main
-  geom_svc
-  ktracker
-  phg4hit
-  PHPythia8
-  g4detectors
-  UtilAna
 )
 
 # ✅ Install the executable

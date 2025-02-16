@@ -2,31 +2,76 @@
 #define _TREE_DATA__H_
 
 #include <vector>
+#include <map>
 
-// Event-level data
+// -------------------------------
+// SQRun Data Structure
+// -------------------------------
+struct RunData {
+    int runID;
+    int n_spill;
+    int n_evt_all;
+    int n_evt_dec;
+    int n_phys_evt;
+    int n_phys_evt_bad;
+    int n_flush_evt;
+    int n_flush_evt_bad;
+    int n_hit;
+    int n_t_hit;
+
+    RunData();  // Constructor
+    virtual ~RunData();  // Virtual destructor
+};
+
+// -------------------------------
+// SQEvent Data Structure
+// -------------------------------
 struct EventData {
-    int run_id;
-    int spill_id;
-    int event_id;
-    int fpga_bits[5];
-    int nim_bits[5];
+    int spillID;
+    int eventID;
+    int rfID;
+    int turnID;
+    int fpgaTriggers[5];
+    int nimTriggers[5];
+    int rfIntensities[33];
+    int trigger_input;
 
     EventData();  // Constructor
     virtual ~EventData();  // Virtual destructor
 };
 
-// Regular hit data
+// -------------------------------
+// SQHit Data Structure
+// -------------------------------
 struct HitData {
-    int detector_id;       // Detector ID
-    int element_id;        // Element ID
-    double tdc_time;       // TDC time
-    double drift_distance; // Drift distance
+    int hitID;
+    int trackID;
+    int detectorID;
+    int elementID;
+    double tdcTime;
+    double driftDistance;
+    bool hitsInTime;
+
+    bool hodo_mask;
+    bool trigger_mask;
+    double truth_x;
+    double truth_y;
+    double truth_z;
+    double truth_px;
+    double truth_py;
+    double truth_pz;
+    double pos;  // get_pos() equivalent
+
+    //Not including now
+    //std::map<short, float> cell;  // get_cell() equivalent
 
     HitData();  // Constructor
     virtual ~HitData();  // Virtual destructor
 };
 
-// Trigger-specific hit data
+// -------------------------------
+// SQTriggerHit Data Structure
+// -------------------------------
 struct TriggerHitData {
     int triggerDetectorID;          // Trigger detector ID
     int triggerElementID;           // Trigger element ID
@@ -38,8 +83,11 @@ struct TriggerHitData {
     virtual ~TriggerHitData();  // Virtual destructor
 };
 
-// Vectors for storing hit and trigger hit data
+// -------------------------------
+// Data Storage Vectors
+// -------------------------------
 typedef std::vector<HitData> HitList;
 typedef std::vector<TriggerHitData> TriggerList;
 
 #endif /* _TREE_DATA__H_ */
+

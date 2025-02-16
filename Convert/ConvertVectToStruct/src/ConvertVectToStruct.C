@@ -53,6 +53,7 @@ void StructWrite::OpenFile(const std::string &file_name, TFile *&m_file, TTree *
     }
 
     m_tree->Branch("evt", &evt);
+    m_tree->Branch("run", &run);
     m_tree->Branch("list_hit", &list_hit);
     m_tree->Branch("list_trigger_hit", &list_trigger_hit);
 
@@ -90,28 +91,71 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    int run_id, spill_id, event_id, fpga_bits[5], nim_bits[5];
-    std::vector<int>* detector_id = nullptr, *element_id = nullptr;
-    std::vector<double>* tdc_time = nullptr, *drift_distance = nullptr;
-    std::vector<int>* trigger_detector_id = nullptr, *trigger_element_id = nullptr;
-    std::vector<double>* trigger_tdc_time = nullptr, *trigger_drift_distance = nullptr;
-    std::vector<bool>* hits_in_time = nullptr, *trigger_in_time = nullptr;
+    int spillID, eventID, rfID, turnID, trigger_input;
+    int fpgaTriggers[5], nimTriggers[5], rfIntensities[33];
 
-    tree->SetBranchAddress("runID", &run_id);
-    tree->SetBranchAddress("spillID", &spill_id);
-    tree->SetBranchAddress("eventID", &event_id);
-    tree->SetBranchAddress("fpgaTriggers", fpga_bits);
-    tree->SetBranchAddress("nimTriggers", nim_bits);
-    tree->SetBranchAddress("detectorIDs", &detector_id);
-    tree->SetBranchAddress("elementIDs", &element_id);
-    tree->SetBranchAddress("tdcTimes", &tdc_time);
-    tree->SetBranchAddress("driftDistances", &drift_distance);
-    tree->SetBranchAddress("hitsInTime", &hits_in_time);
-    tree->SetBranchAddress("triggerDetectorIDs", &trigger_detector_id);
-    tree->SetBranchAddress("triggerElementIDs", &trigger_element_id);
-    tree->SetBranchAddress("triggerTdcTimes", &trigger_tdc_time);
-    tree->SetBranchAddress("triggerDriftDistances", &trigger_drift_distance);
-    tree->SetBranchAddress("triggerHitsInTime", &trigger_in_time);
+    int runID, n_spill, n_evt_all, n_evt_dec, n_phys_evt, n_phys_evt_bad;
+    int n_flush_evt, n_flush_evt_bad, n_hit, n_t_hit;
+
+    std::vector<int>* hitID = nullptr;
+    std::vector<int>* trackID = nullptr;
+    std::vector<int>* detectorID = nullptr, *elementID = nullptr;
+    std::vector<double>* tdcTime = nullptr, *driftDistance = nullptr;
+    std::vector<bool>* hitsInTime = nullptr;
+
+    std::vector<bool>* hodo_mask = nullptr, *trigger_mask = nullptr;
+    std::vector<double>* truth_x = nullptr, *truth_y = nullptr, *truth_z = nullptr;
+    std::vector<double>* truth_px = nullptr, *truth_py = nullptr, *truth_pz = nullptr;
+    std::vector<double>* pos = nullptr;
+
+    std::vector<int>* triggerDetectorID = nullptr, *triggerElementID = nullptr;
+    std::vector<double>* triggerTdcTime = nullptr, *triggerDriftDistance = nullptr;
+    std::vector<bool>* triggerInTime = nullptr;
+
+    tree->SetBranchAddress("spillID", &spillID);
+    tree->SetBranchAddress("eventID", &eventID);
+    tree->SetBranchAddress("rfID", &rfID);
+    tree->SetBranchAddress("turnID", &turnID);
+    tree->SetBranchAddress("trigger_input", &trigger_input);
+    tree->SetBranchAddress("fpgaTriggers", fpgaTriggers);
+    tree->SetBranchAddress("nimTriggers", nimTriggers);
+    tree->SetBranchAddress("rfIntensities", rfIntensities);
+
+    tree->SetBranchAddress("runID", &runID);
+    tree->SetBranchAddress("n_spill", &n_spill);
+    tree->SetBranchAddress("n_evt_all", &n_evt_all);
+    tree->SetBranchAddress("n_evt_dec", &n_evt_dec);
+    tree->SetBranchAddress("n_phys_evt", &n_phys_evt);
+    tree->SetBranchAddress("n_phys_evt_bad", &n_phys_evt_bad);
+    tree->SetBranchAddress("n_flush_evt", &n_flush_evt);
+    tree->SetBranchAddress("n_flush_evt_bad", &n_flush_evt_bad);
+    tree->SetBranchAddress("n_hit", &n_hit);
+    tree->SetBranchAddress("n_t_hit", &n_t_hit);
+
+    tree->SetBranchAddress("hitIDs", &hitID);
+    tree->SetBranchAddress("trackIDs", &trackID);
+    tree->SetBranchAddress("detectorIDs", &detectorID);
+    tree->SetBranchAddress("elementIDs", &elementID);
+    tree->SetBranchAddress("tdcTimes", &tdcTime);
+    tree->SetBranchAddress("driftDistances", &driftDistance);
+    tree->SetBranchAddress("hitsInTime", &hitsInTime);
+    tree->SetBranchAddress("pos", &pos);
+
+    tree->SetBranchAddress("hodo_mask", &hodo_mask);
+    tree->SetBranchAddress("trigger_mask", &trigger_mask);
+    tree->SetBranchAddress("truth_x", &truth_x);
+    tree->SetBranchAddress("truth_y", &truth_y);
+    tree->SetBranchAddress("truth_z", &truth_z);
+    tree->SetBranchAddress("truth_px", &truth_px);
+    tree->SetBranchAddress("truth_py", &truth_py);
+    tree->SetBranchAddress("truth_pz", &truth_pz);
+
+    tree->SetBranchAddress("triggerDetectorIDs", &triggerDetectorID);
+    tree->SetBranchAddress("triggerElementIDs", &triggerElementID);
+    tree->SetBranchAddress("triggerTdcTimes", &triggerTdcTime);
+    tree->SetBranchAddress("triggerDriftDistances", &triggerDriftDistance);
+    tree->SetBranchAddress("triggerHitsInTime", &triggerInTime);
+
 
     Long64_t nentries = tree->GetEntries();
 
@@ -121,36 +165,69 @@ int main(int argc, char *argv[]) {
     for (Long64_t i = 0; i < nentries; i++) {
     tree->GetEntry(i);
 
-    writer.evt.run_id = run_id;
-    writer.evt.spill_id = spill_id;
-    writer.evt.event_id = event_id;
+    writer.evt.spillID = spillID;
+    writer.evt.eventID = eventID;
+    writer.evt.rfID = rfID;
+    writer.evt.turnID = turnID;
+    writer.evt.trigger_input = trigger_input;
 
     for (int ii = 0; ii < 5; ii++) {
-    writer.evt.fpga_bits[ii] = fpga_bits[ii];
-    writer.evt.nim_bits[ii] = nim_bits[ii];
+        writer.evt.fpgaTriggers[ii] = fpgaTriggers[ii];
+        writer.evt.nimTriggers[ii] = nimTriggers[ii];
     }
 
+    for (int ii = 0; ii < 33; ii++) {
+        writer.evt.rfIntensities[ii] = rfIntensities[ii];
+    }
+
+    writer.run.runID = runID;
+    writer.run.n_spill = n_spill;
+    writer.run.n_evt_all = n_evt_all;
+    writer.run.n_evt_dec = n_evt_dec;
+    writer.run.n_phys_evt = n_phys_evt;
+    writer.run.n_phys_evt_bad = n_phys_evt_bad;
+    writer.run.n_flush_evt = n_flush_evt;
+    writer.run.n_flush_evt_bad = n_flush_evt_bad;
+    writer.run.n_hit = n_hit;
+    writer.run.n_t_hit = n_t_hit;
+
     writer.list_hit.clear();
-    for (size_t j = 0; j < tdc_time->size(); j++) {
-    HitData hit;
-    hit.detector_id = detector_id->at(j);
-    hit.element_id = element_id->at(j);
-    hit.tdc_time = tdc_time->at(j);
-    hit.drift_distance = drift_distance->at(j);
-    writer.list_hit.push_back(hit);
+    for (size_t j = 0; j < tdcTime->size(); j++) {
+        HitData hit;
+        hit.hitID = hitID->at(j);
+        hit.trackID = trackID->at(j);
+        hit.detectorID = detectorID->at(j);
+        hit.elementID = elementID->at(j);
+        hit.tdcTime = tdcTime->at(j);
+        hit.driftDistance = driftDistance->at(j);
+        hit.hitsInTime = hitsInTime->at(j);
+
+        hit.hodo_mask = hodo_mask->at(j);
+        hit.trigger_mask = trigger_mask->at(j);
+        hit.truth_x = truth_x->at(j);
+        hit.truth_y = truth_y->at(j);
+        hit.truth_z = truth_z->at(j);
+        hit.truth_px = truth_px->at(j);
+        hit.truth_py = truth_py->at(j);
+        hit.truth_pz = truth_pz->at(j);
+        hit.pos = pos->at(j);
+
+        writer.list_hit.push_back(hit);
     }
 
     // Populate trigger hit data
     writer.list_trigger_hit.clear();
-    for (size_t j = 0; j < trigger_tdc_time->size(); ++j) {
-    TriggerHitData trigger_hit;
-    trigger_hit.triggerDetectorID = trigger_detector_id->at(j);
-    trigger_hit.triggerElementID = trigger_element_id->at(j);
-    trigger_hit.triggerTdcTime = trigger_tdc_time->at(j);
-    trigger_hit.triggerDriftDistance = trigger_drift_distance->at(j);
-    trigger_hit.triggerInTime = trigger_in_time->at(j);
-    writer.list_trigger_hit.push_back(trigger_hit);
+    for (size_t j = 0; j < triggerTdcTime->size(); ++j) {
+        TriggerHitData trigger_hit;
+        trigger_hit.triggerDetectorID = triggerDetectorID->at(j);
+        trigger_hit.triggerElementID = triggerElementID->at(j);
+        trigger_hit.triggerTdcTime = triggerTdcTime->at(j);
+        trigger_hit.triggerDriftDistance = triggerDriftDistance->at(j);
+        trigger_hit.triggerInTime = triggerInTime->at(j);
+
+        writer.list_trigger_hit.push_back(trigger_hit);
     }
+
 
     m_tree->Fill();
     }

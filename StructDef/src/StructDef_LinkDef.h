@@ -7,6 +7,7 @@
 
 // Link your custom structs
 #pragma link C++ struct EventData+;
+#pragma link C++ struct RunData+;
 #pragma link C++ struct HitData+;
 #pragma link C++ struct TriggerHitData+;
 

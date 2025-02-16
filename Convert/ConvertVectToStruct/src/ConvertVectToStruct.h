@@ -26,8 +26,8 @@ public:
     int trig_bits = 0;
     int Intensity[33] = {0};  // Initialize array with zero values
 
-    // Hit data (list of hits for each event)
     EventData  evt;
+    RunData run;
     TriggerList list_trigger_hit;
     HitList list_hit;  
 
