@@ -30,7 +30,7 @@ ROOT_GENERATE_DICTIONARY(vector_rewrite_example_Dict VectorRewrite.h LINKDEF Lin
 
 # Create shared library
 add_library(vector_rewrite_example SHARED ${sources} vector_rewrite_example_Dict.cxx)
-target_link_libraries(vector_rewrite_example PRIVATE ${ROOT_LIBRARIES} fun4all interface_main geom_svc ktracker phg4hit PHPythia8 g4detectors UtilAna)
+target_link_libraries(vector_rewrite_example PRIVATE ${ROOT_LIBRARIES})
 
 # Ensure proper compilation options for the library
 target_compile_options(vector_rewrite_example PRIVATE -std=c++17)
