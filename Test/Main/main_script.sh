@@ -12,8 +12,7 @@ mkdir -p "$BASE_DIR/results"
 mkdir -p "$BASE_DIR/Struct"
 
 # Configuration
-VECTOR_FILES=("/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/run_002281_spill_000000000_spin_vector.root" "/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/run_002282_spill_000000000_spin_vector.root" "/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/run_002283_spill_000000000_spin_vector.root")
-REWRITE_TYPES=("Struct" "Vector")  # Types of rewrite (StructRewrite, VectorRewrite)
+VECTOR_FILES=("/project/ptgroup/Catherine/Fun4AllVectFileManager/Test/Main/Vector/large_combined_vect_file.root")
 
 # Combined results CSV file
 COMBINED_CSV="$BASE_DIR/results/combined_results.csv"
@@ -33,8 +32,8 @@ else
 fi
 
 # Parameters for testing
-BASKET_SIZES=(32000 64000)
-AUTOFLUSH_VALUES=(0 2500 5000)
+BASKET_SIZES=(64000)
+AUTOFLUSH_VALUES=(2500)
 
 # Paths to executables
 CONVERT_TO_STRUCT="$ROOT_DIR/Convert/ConvertVectToStruct/maker/ConvertVectToStruct"
@@ -70,7 +69,7 @@ run_rewrite_tests() {
 
   echo "Algorithm,Compression Level,Basket Size,AutoFlush,File Size (MB),Write Time (s)" >> "$csv_file"
 
-  Algo 1: Levels 5, 6, 7
+  #Algo 1: Levels 5, 6, 7
   for algo in 1; do
     for level in 5 6 7; do
       for basket_size in "${BASKET_SIZES[@]}"; do
