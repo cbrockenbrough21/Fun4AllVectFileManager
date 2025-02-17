@@ -10,8 +10,9 @@ vector_files = [
     # "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/run_003644_spill_000000000_spin_vector.root",
     # "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/run_004062_spill_000000000_spin_vector.root",
     # "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/run_005459_spill_000000000_spin_vector.root"
-    "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/large_combined_file.root",
-    "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/mega_combined_file.root"
+    # "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/large_combined_file.root",
+    # "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/mega_combined_file.root"
+    "/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/large_combined_vect_file.root"
 ]
 
 # Function to get the number of events in a ROOT file

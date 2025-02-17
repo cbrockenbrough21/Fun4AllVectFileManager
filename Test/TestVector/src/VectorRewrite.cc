@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
     std::uintmax_t file_size = getFileSize(output_file_path);
 
     std::cout << "WRITE_TIME=" << real_time 
-              << " FILE_SIZE=" << std::fixed << std::setprecision(3)
+              << " FILE_SIZE=" << std::fixed
               << (static_cast<double>(file_size) / (1024.0 * 1024.0)) << "MB" 
               << std::endl;
 

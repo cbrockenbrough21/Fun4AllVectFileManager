@@ -12,11 +12,11 @@ mkdir -p "$BASE_DIR/results"
 mkdir -p "$BASE_DIR/Struct"
 
 # Configuration
-VECTOR_FILES=("/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/large_combined_file.root")
+VECTOR_FILES=("/project/ptgroup/Catherine/Fun4AllVectFileManager/Convert/ConvertToVect/large_combined_vect_file.root")
 REWRITE_TYPES=("Struct" "Vector")  # Types of rewrite (StructRewrite, VectorRewrite)
 
 # Combined results CSV file
-COMBINED_CSV="$BASE_DIR/results/combined_results.csv"
+COMBINED_CSV="$BASE_DIR/results/combined_results_no_scale.csv"
 
 # Check if --reset flag is provided
 RESET=false
@@ -33,8 +33,8 @@ else
 fi
 
 # Parameters for testing
-BASKET_SIZES=(32000 64000)
-AUTOFLUSH_VALUES=(0 2500 5000)
+BASKET_SIZES=(64000)
+AUTOFLUSH_VALUES=(2500)
 
 # Paths to executables
 CONVERT_TO_STRUCT="$ROOT_DIR/Convert/ConvertVectToStruct/maker/ConvertVectToStruct"
@@ -138,8 +138,8 @@ for vector_file in "${VECTOR_FILES[@]}"; do
     "$CONVERT_TO_STRUCT" "$vector_file" "$struct_file"
 
     # Run VectorRewrite tests
-    run_rewrite_tests "Vector" "$vector_file" "$BASE_DIR/Vector/${base_name}_rewritten.root" \
-    "$BASE_DIR/logs/${base_name}_vector_log.txt" "$BASE_DIR/results/${base_name}_results.csv"
+    # run_rewrite_tests "Vector" "$vector_file" "$BASE_DIR/Vector/${base_name}_rewritten.root" \
+    # "$BASE_DIR/logs/${base_name}_vector_log.txt" "$BASE_DIR/results/${base_name}_results.csv"
 
     # Run StructRewrite tests
     run_rewrite_tests "Struct" "$struct_file" "$BASE_DIR/Struct/${base_name_without_vector}_struct_rewritten.root" \

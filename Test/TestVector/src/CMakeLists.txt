@@ -33,11 +33,11 @@ execute_process(COMMAND root-config --cflags OUTPUT_VARIABLE ROOT_CFLAGS  OUTPUT
 execute_process(COMMAND root-config --libs   OUTPUT_VARIABLE ROOT_LINK    OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 # Set C++ flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -I$ENV{OFFLINE_MAIN}/include/ ${ROOT_CFLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -I$ENV{OFFLINE_MAIN}/include/ ${ROOT_CFLAGS}")
 
 # Build the shared library
 add_library(vector_rewrite_example SHARED ${sources} vector_rewrite_example_Dict.cc)
-target_link_libraries(vector_rewrite_example fun4all interface_main geom_svc ktracker phg4hit PHPythia8 g4detectors UtilAna)
+target_link_libraries(vector_rewrite_example)
 
 # Add the executable target for VectorRewrite.cc
 add_executable(VectorRewrite VectorRewrite.cc)  # Specify your executable name and source file

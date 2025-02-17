@@ -14,7 +14,7 @@ execute_process(COMMAND root-config --cflags OUTPUT_VARIABLE ROOT_CFLAGS  OUTPUT
 execute_process(COMMAND root-config --libs   OUTPUT_VARIABLE ROOT_LINK    OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 # 2) Set C++ flags
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ROOT_CFLAGS}")
 set(CMAKE_INSTALL_RPATH "/project/ptgroup/Catherine/Fun4AllVectFileManager/StructDef/inst/lib")
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
@@ -45,14 +45,6 @@ add_executable(ConvertVectToStruct ConvertVectToStruct.C)
 target_link_libraries(ConvertVectToStruct
   Struct_Def
   ${ROOT_LINK}
-  fun4all
-  interface_main
-  geom_svc
-  ktracker
-  phg4hit
-  PHPythia8
-  g4detectors
-  UtilAna
 )
 
 # 7) Install the executable

@@ -2,12 +2,21 @@ DIR_TOP=$(dirname $(readlink -f $BASH_SOURCE))
 DIR_BUILD=$DIR_TOP/build
 DIR_INST=$DIR_TOP/inst
 
-source /project/ptgroup/spinquest/this-e1039.sh
+#source /project/ptgroup/spinquest/this-e1039.sh
 #source /exp/seaquest/app/software/osg/software/e1039/this-e1039.sh
 #source /exp/seaquest/app/software/osg/users/$USER/e1039/core/this-e1039.sh
 export LD_LIBRARY_PATH=$DIR_INST/lib:$LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/project/ptgroup/Catherine/Fun4AllVectFileManager/StructDef/build:$LD_LIBRARY_PATH
 export ROOT_INCLUDE_PATH=/project/ptgroup/Catherine/Fun4AllVectFileManager/StructDef/src:$ROOT_INCLUDE_PATH
+
+module purge
+module load miniforge
+module load gcc/11.4.0
+module load openmpi/4.1.4
+module load root/6.32.06
+module load intel-compilers/2023.1.0
+module load impi/2021.9.0
+module load python/3.11.4
 
 
 function cmake-this {
