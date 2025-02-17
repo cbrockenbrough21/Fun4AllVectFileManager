@@ -20,6 +20,7 @@ public:
 
     // Hit data (list of hits for each event)
     EventData  evt;
+    RunData run;
     TriggerList list_trigger_hit;
     HitList list_hit;  
 

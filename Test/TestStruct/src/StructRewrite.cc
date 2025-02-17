@@ -44,10 +44,12 @@ int main(int argc, char *argv[]) {
 
     // Pointers to read from the input tree
     EventData *evt_ptr = nullptr;
+    RunData *run_ptr = nullptr;
     std::vector<HitData> *list_hit_ptr = nullptr;
     std::vector<TriggerHitData> *list_trigger_hit_ptr = nullptr;
 
     input_tree->SetBranchAddress("evt", &evt_ptr);
+    input_tree->SetBranchAddress("run", &run_ptr);
     input_tree->SetBranchAddress("list_hit", &list_hit_ptr);
     input_tree->SetBranchAddress("list_trigger_hit", &list_trigger_hit_ptr);
 
@@ -67,6 +69,7 @@ int main(int argc, char *argv[]) {
 
     // Create branches in the output TTree using writer's data members
     output_tree->Branch("evt", &writer.evt);
+    output_tree->Branch("run", &writer.run);
     output_tree->Branch("list_hit", &writer.list_hit);
     output_tree->Branch("list_trigger_hit", &writer.list_trigger_hit);
 
@@ -85,6 +88,7 @@ int main(int argc, char *argv[]) {
 
         // Copy data from pointers -> writer's data
         writer.evt = *evt_ptr;
+        writer.run = *run_ptr;
         writer.list_hit = *list_hit_ptr;
         writer.list_trigger_hit = *list_trigger_hit_ptr;
 
@@ -101,7 +105,7 @@ int main(int argc, char *argv[]) {
     double real_time = timer.RealTime();
     std::uintmax_t file_size = getFileSize(output_file_path);
     std::cout << "WRITE_TIME=" << real_time 
-              << " FILE_SIZE=" << std::fixed << std::setprecision(3)
+              << " FILE_SIZE=" << std::fixed
               << (static_cast<double>(file_size) / (1024 * 1024)) << "MB" 
               << std::endl;
 
