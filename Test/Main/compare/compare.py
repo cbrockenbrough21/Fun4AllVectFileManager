@@ -14,8 +14,10 @@ def filter_conditions(df):
 old_filtered = filter_conditions(old_df)
 new_filtered = filter_conditions(new_df)
 
-# Merge on File Name, Algorithm, Compression Level
-merged_df = pd.merge(old_filtered, new_filtered, on=["File Name", "Algorithm", "Compression Level"], suffixes=("_old", "_new"))
+# Merge on File Name, Rewrite Type, Algorithm, Compression Level
+merged_df = pd.merge(old_filtered, new_filtered, 
+                      on=["File Name", "Rewrite Type", "Algorithm", "Compression Level"], 
+                      suffixes=("_old", "_new"))
 
 # Compute percentage increase
 merged_df["Size Increase (%)"] = ((merged_df["File Size (MB)_new"] - merged_df["File Size (MB)_old"]) / merged_df["File Size (MB)_old"]) * 100
@@ -24,33 +26,35 @@ merged_df["Time Increase (%)"] = ((merged_df["Write Time (s)_new"] - merged_df["
 # Create a new column for Algorithm-Level pair
 merged_df["Algo_Level"] = merged_df["Algorithm"].astype(str) + "_" + merged_df["Compression Level"].astype(str)
 
-# --- Visualization ---
-plt.figure(figsize=(12, 6))
+# Separate Struct and Vector Data
+struct_df = merged_df[merged_df["Rewrite Type"] == "Struct"]
+vector_df = merged_df[merged_df["Rewrite Type"] == "Vector"]
 
-# Scatter plot colored by File Name
-plt.figure(figsize=(8, 6))
-sns.scatterplot(data=merged_df, x="Size Increase (%)", y="Time Increase (%)", hue="File Name", palette="tab10", s=80, edgecolor="black")
-plt.xlabel("File Size Increase (%)")
-plt.ylabel("Write Time Increase (%)")
-plt.title("Size vs. Write Time Increase (Colored by File Name)")
-plt.legend(loc="best", fontsize=8, title="File Name", bbox_to_anchor=(1, 1))
-plt.grid()
+# --- Function for Plotting ---
+def create_scatter_plot(df, title_suffix, filename_suffix):
+    plt.figure(figsize=(8, 6))
+    sns.scatterplot(data=df, x="Size Increase (%)", y="Time Increase (%)", hue="File Name", palette="tab10", s=80, edgecolor="black")
+    plt.xlabel("File Size Increase (%)")
+    plt.ylabel("Write Time Increase (%)")
+    plt.title(f"Size vs. Write Time Increase ({title_suffix} - Colored by File Name)")
+    plt.legend(loc="best", fontsize=8, title="File Name", bbox_to_anchor=(1, 1))
+    plt.grid()
+    plt.savefig(f"scatter_by_file_name_{filename_suffix}.png", dpi=300, bbox_inches="tight")
+    plt.close()
 
-# Save the first scatter plot
-plt.savefig("scatter_by_file_name.png", dpi=300, bbox_inches="tight")
-plt.close()
+    # Scatter plot colored by Algorithm/Compression Level
+    plt.figure(figsize=(8, 6))
+    sns.scatterplot(data=df, x="Size Increase (%)", y="Time Increase (%)", hue="Algo_Level", palette="Set1", s=80, edgecolor="black")
+    plt.xlabel("File Size Increase (%)")
+    plt.ylabel("Write Time Increase (%)")
+    plt.title(f"Size vs. Write Time Increase ({title_suffix} - Colored by Algorithm/Level)")
+    plt.legend(loc="best", fontsize=8, title="Algorithm_Level", bbox_to_anchor=(1, 1))
+    plt.grid()
+    plt.savefig(f"scatter_by_algo_level_{filename_suffix}.png", dpi=300, bbox_inches="tight")
+    plt.close()
 
-# Scatter plot colored by Algorithm/Compression Level
-plt.figure(figsize=(8, 6))
-sns.scatterplot(data=merged_df, x="Size Increase (%)", y="Time Increase (%)", hue="Algo_Level", palette="Set1", s=80, edgecolor="black")
-plt.xlabel("File Size Increase (%)")
-plt.ylabel("Write Time Increase (%)")
-plt.title("Size vs. Write Time Increase (Colored by Algorithm/Level)")
-plt.legend(loc="best", fontsize=8, title="Algorithm_Level", bbox_to_anchor=(1, 1))
-plt.grid()
+# Generate plots separately for Struct and Vector
+create_scatter_plot(struct_df, "Struct", "struct")
+create_scatter_plot(vector_df, "Vector", "vector")
 
-# Save the second scatter plot
-plt.savefig("scatter_by_algo_level.png", dpi=300, bbox_inches="tight")
-plt.close()
-
-print("Scatter plots saved as 'scatter_by_file_name.png' and 'scatter_by_algo_level.png'")
+print("Scatter plots saved separately for Struct and Vector.")
