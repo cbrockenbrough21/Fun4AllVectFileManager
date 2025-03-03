@@ -1,36 +1,32 @@
 /// Fun4SQHitDst.C: Fun4All macro to extract SQHitVector from DST files.
 R__LOAD_LIBRARY(libcalibrator)
 R__LOAD_LIBRARY(libktracker)
-
-#include <sys/stat.h>
-
-bool file_exists(const char* filename) {
-    struct stat buffer;
-    return (stat(filename, &buffer) == 0);
-}
-
 int Fun4SQHitDst(const char* fn_dst="input.dst.root",
-                 const char* fn_udst="SQHit_only.root",
-                 const int n_events=1000)  // Limit events
+                 const char* fn_udst="SQHit_only.root")
 {
-  Fun4AllServer* se = Fun4AllServer::instance();
-  se->Verbosity(1);
+    Fun4AllServer* se = Fun4AllServer::instance();
+    Fun4AllInputManager *in = new Fun4AllDstInputManager("SimDst");
+    se->registerInputManager(in);
 
-  Fun4AllInputManager *in = new Fun4AllDstInputManager("SimDst");
+    // Register Output Manager
+    Fun4AllDstOutputManager *out = new Fun4AllDstOutputManager("DSTOUT", fn_udst);
+    se->registerOutputManager(out);
+    out->AddNode("SQHitVector");  // Only keep SQHitVector
 
-  se->registerInputManager(in);
+    // **Exclude SQRun node from the output DST**
+    out->RemoveNode("SQRun");
 
-  Fun4AllDstOutputManager *out = new Fun4AllDstOutputManager("DSTOUT", fn_udst);
-  se->registerOutputManager(out);
-  out->AddNode("SQHitVector");
+    cerr << "Opening DST file: " << fn_dst << endl;
+    in->fileopen(fn_dst);
+    
+    se->run();
 
-  in->fileopen(fn_dst);
+    cerr << "Ending run..." << endl;
+    se->End();
+
+    cerr << "Deleting Fun4AllServer..." << endl;
+    delete se;
   
-  se->run(n_events);
-
-  se->End();
-
-  delete se;
-  
-  return 0;
+    cerr << "Process completed!" << endl;
+    return 0;
 }
