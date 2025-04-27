@@ -104,8 +104,8 @@ int main(int argc, char *argv[]) {
     std::vector<bool>* hitsInTime = nullptr;
 
     std::vector<bool>* hodo_mask = nullptr, *trigger_mask = nullptr;
-    std::vector<double>* truth_x = nullptr, *truth_y = nullptr, *truth_z = nullptr;
-    std::vector<double>* truth_px = nullptr, *truth_py = nullptr, *truth_pz = nullptr;
+    // std::vector<double>* truth_x = nullptr, *truth_y = nullptr, *truth_z = nullptr;
+    // std::vector<double>* truth_px = nullptr, *truth_py = nullptr, *truth_pz = nullptr;
     std::vector<double>* pos = nullptr;
 
     // std::vector<int>* triggerDetectorID = nullptr, *triggerElementID = nullptr;
@@ -143,12 +143,12 @@ int main(int argc, char *argv[]) {
 
     tree->SetBranchAddress("hodo_mask", &hodo_mask);
     tree->SetBranchAddress("trigger_mask", &trigger_mask);
-    tree->SetBranchAddress("truth_x", &truth_x);
-    tree->SetBranchAddress("truth_y", &truth_y);
-    tree->SetBranchAddress("truth_z", &truth_z);
-    tree->SetBranchAddress("truth_px", &truth_px);
-    tree->SetBranchAddress("truth_py", &truth_py);
-    tree->SetBranchAddress("truth_pz", &truth_pz);
+    // tree->SetBranchAddress("truth_x", &truth_x);
+    // tree->SetBranchAddress("truth_y", &truth_y);
+    // tree->SetBranchAddress("truth_z", &truth_z);
+    // tree->SetBranchAddress("truth_px", &truth_px);
+    // tree->SetBranchAddress("truth_py", &truth_py);
+    // tree->SetBranchAddress("truth_pz", &truth_pz);
 
     // tree->SetBranchAddress("triggerDetectorIDs", &triggerDetectorID);
     // tree->SetBranchAddress("triggerElementIDs", &triggerElementID);
@@ -204,12 +204,12 @@ int main(int argc, char *argv[]) {
 
         hit.hodo_mask = hodo_mask->at(j);
         hit.trigger_mask = trigger_mask->at(j);
-        hit.truth_x = truth_x->at(j);
-        hit.truth_y = truth_y->at(j);
-        hit.truth_z = truth_z->at(j);
-        hit.truth_px = truth_px->at(j);
-        hit.truth_py = truth_py->at(j);
-        hit.truth_pz = truth_pz->at(j);
+        // hit.truth_x = truth_x->at(j);
+        // hit.truth_y = truth_y->at(j);
+        // hit.truth_z = truth_z->at(j);
+        // hit.truth_px = truth_px->at(j);
+        // hit.truth_py = truth_py->at(j);
+        // hit.truth_pz = truth_pz->at(j);
         hit.pos = pos->at(j);
 
         writer.list_hit.push_back(hit);

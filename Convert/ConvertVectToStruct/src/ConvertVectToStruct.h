@@ -33,7 +33,7 @@ public:
 
     // Compression settings for ROOT output
     int compression_algo = 1;
-    int compression_level = 5;
+    int compression_level = 3;
     int m_basket_size = 32000;
     int m_auto_flush = 0;
 
