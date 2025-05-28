@@ -52,6 +52,7 @@ endif()
 # Build the shared library
 add_library(fun4all_vect_file_manager SHARED ${sources} fun4all_vect_file_manager_Dict.cc)
 target_link_libraries(fun4all_vect_file_manager fun4all interface_main geom_svc ktracker phg4hit PHPythia8 g4detectors UtilAna)
+target_link_libraries(fun4all_vect_file_manager ${Boost_FILESYSTEM_LIBRARY} ${Boost_IOSTREAMS_LIBRARY} ${Boost_SYSTEM_LIBRARY})
 install(TARGETS fun4all_vect_file_manager DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
 # Install the pcm files in case of ROOT 6.
