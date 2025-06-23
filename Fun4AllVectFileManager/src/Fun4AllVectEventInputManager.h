@@ -61,13 +61,13 @@ std::vector<int>* detectorIDs = nullptr;
 std::vector<int>* elementIDs = nullptr;
 std::vector<double>* driftDistances = nullptr;
 std::vector<double>* tdcTimes = nullptr;
-std::vector<bool>* hitsInTime = nullptr;
+// std::vector<bool>* hitsInTime = nullptr;
 
-std::vector<int>* triggerDetectorIDs = nullptr;
-std::vector<int>* triggerElementIDs = nullptr;
-std::vector<double>* triggerTdcTimes = nullptr;
-std::vector<int>* triggerDriftDistances = nullptr;
-std::vector<bool>* triggerHitsInTime = nullptr;
+// std::vector<int>* triggerDetectorIDs = nullptr;
+// std::vector<int>* triggerElementIDs = nullptr;
+// std::vector<double>* triggerTdcTimes = nullptr;
+// std::vector<int>* triggerDriftDistances = nullptr;
+// std::vector<bool>* triggerHitsInTime = nullptr;
 
 int fpgaTriggers[5] = {0};
 int nimTriggers[5] = {0};

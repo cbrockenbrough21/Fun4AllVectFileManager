@@ -66,17 +66,17 @@ m_tree->Branch("rfIntensities", rfIntensities, "rfIntensities[33]/I");
 m_tree->Branch("fpgaTriggers", fpgaTriggers, "fpgaTriggers[5]/I");
 m_tree->Branch("nimTriggers", nimTriggers, "nimTriggers[5]/I");
 
-m_tree->Branch("detectorIDs", &detectorIDs);
-m_tree->Branch("elementIDs", &elementIDs);
-m_tree->Branch("tdcTimes", &tdcTimes);
-m_tree->Branch("driftDistances", &driftDistances);
-m_tree->Branch("hitsInTime", &hitsInTime);
+m_tree->Branch("detectorID", &detectorIDs);
+m_tree->Branch("elementID", &elementIDs);
+m_tree->Branch("tdcTime", &tdcTimes);
+m_tree->Branch("driftDistance", &driftDistances);
+// m_tree->Branch("hitsInTime", &hitsInTime);
 
-m_tree->Branch("triggerDetectorIDs", &triggerDetectorIDs);
-m_tree->Branch("triggerElementIDs", &triggerElementIDs);
-m_tree->Branch("triggerTdcTimes", &triggerTdcTimes);
-m_tree->Branch("triggerDriftDistances", &triggerDriftDistances);
-m_tree->Branch("triggerHitsInTime", &triggerHitsInTime);
+// m_tree->Branch("triggerDetectorIDs", &triggerDetectorIDs);
+// m_tree->Branch("triggerElementIDs", &triggerElementIDs);
+// m_tree->Branch("triggerTdcTimes", &triggerTdcTimes);
+// m_tree->Branch("triggerDriftDistances", &triggerDriftDistances);
+// m_tree->Branch("triggerHitsInTime", &triggerHitsInTime);
 
 
     m_evt = findNode::getClass<SQEvent>(startNode, "SQEvent");
@@ -124,20 +124,20 @@ int Fun4AllVectEventOutputManager::Write(PHCompositeNode* startNode) {
             tdcTimes.push_back(hit->get_tdc_time());
             driftDistances.push_back(hit->get_drift_distance());
             // cout << "get drift distance: " << hit->get_drift_distance() << endl;
-            hitsInTime.push_back(hit->is_in_time());
+            // hitsInTime.push_back(hit->is_in_time());
         }
     }
 
-    if (m_trig_hit_vec) {
-        for (int ihit = 0; ihit < m_trig_hit_vec->size(); ++ihit) {
-            SQHit* hit = m_trig_hit_vec->at(ihit);
-            triggerDetectorIDs.push_back(hit->get_detector_id());
-            triggerElementIDs.push_back(hit->get_element_id());
-            triggerTdcTimes.push_back(hit->get_tdc_time());
-            triggerDriftDistances.push_back(hit->get_drift_distance());
-            triggerHitsInTime.push_back(hit->is_in_time());
-        }
-    }
+    // if (m_trig_hit_vec) {
+    //     for (int ihit = 0; ihit < m_trig_hit_vec->size(); ++ihit) {
+    //         SQHit* hit = m_trig_hit_vec->at(ihit);
+    //         triggerDetectorIDs.push_back(hit->get_detector_id());
+    //         triggerElementIDs.push_back(hit->get_element_id());
+    //         triggerTdcTimes.push_back(hit->get_tdc_time());
+    //         triggerDriftDistances.push_back(hit->get_drift_distance());
+    //         triggerHitsInTime.push_back(hit->is_in_time());
+    //     }
+    // }
 
     m_tree->Fill();
     return 0;
@@ -157,12 +157,11 @@ void Fun4AllVectEventOutputManager::ResetBranches() {
     elementIDs.clear();
     tdcTimes.clear();
     driftDistances.clear();
-    hitsInTime.clear();
+    // hitsInTime.clear();
 
-    triggerDetectorIDs.clear();
-    triggerElementIDs.clear();
-    triggerTdcTimes.clear();
-    triggerDriftDistances.clear();
-    triggerHitsInTime.clear();
+    // triggerDetectorIDs.clear();
+    // triggerElementIDs.clear();
+    // triggerTdcTimes.clear();
+    // triggerDriftDistances.clear();
+    // triggerHitsInTime.clear();
 }
-

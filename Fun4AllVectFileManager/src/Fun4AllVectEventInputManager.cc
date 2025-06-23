@@ -134,21 +134,21 @@ void Fun4AllVectEventInputManager::VectToE1039() {
 		hit->set_element_id(elementIDs->at(i));
 		hit->set_tdc_time(tdcTimes->at(i));
 		hit->set_drift_distance(driftDistances->at(i));
-		hit->set_in_time(hitsInTime->at(i));
+		// hit->set_in_time(hitsInTime->at(i));
 		hit_vec->push_back(hit);
 	}
 
 	//we need to fill from the trig-hits vector (need to work on this later)
-	for (size_t i = 0; i < triggerElementIDs->size(); ++i) {
-		SQHit* hit = new SQHit_v1();
-		hit->set_hit_id(i);
-		hit->set_detector_id(triggerDetectorIDs->at(i));
-		hit->set_element_id(triggerElementIDs->at(i));
-		hit->set_tdc_time(triggerTdcTimes->at(i));
-		hit->set_drift_distance(triggerDriftDistances->at(i));
-		hit->set_in_time(triggerHitsInTime->at(i));
-		trig_hit_vec->push_back(hit);
-	}
+	// for (size_t i = 0; i < triggerElementIDs->size(); ++i) {
+	// 	SQHit* hit = new SQHit_v1();
+	// 	hit->set_hit_id(i);
+	// 	hit->set_detector_id(triggerDetectorIDs->at(i));
+	// 	hit->set_element_id(triggerElementIDs->at(i));
+	// 	hit->set_tdc_time(triggerTdcTimes->at(i));
+	// 	hit->set_drift_distance(triggerDriftDistances->at(i));
+	// 	hit->set_in_time(triggerHitsInTime->at(i));
+	// 	trig_hit_vec->push_back(hit);
+	// }
 }
 
 int Fun4AllVectEventInputManager::fileopen(const std::string &filenam) {
@@ -186,22 +186,22 @@ int Fun4AllVectEventInputManager::fileopen(const std::string &filenam) {
         return -1; 
     }
 _tin->SetBranchAddress("eventID", &eventID);    
-_tin->SetBranchAddress("runID", &runID);    
-_tin->SetBranchAddress("spillID", &spillID);    
-_tin->SetBranchAddress("fpgaTriggers", fpgaTriggers);
-_tin->SetBranchAddress("nimTriggers", nimTriggers);
-_tin->SetBranchAddress("rfIntensities", rfIntensities);
+// _tin->SetBranchAddress("runID", &runID);    
+// _tin->SetBranchAddress("spillID", &spillID);    
+// _tin->SetBranchAddress("fpgaTriggers", fpgaTriggers);
+// _tin->SetBranchAddress("nimTriggers", nimTriggers);
+// _tin->SetBranchAddress("rfIntensities", rfIntensities);
 
-_tin->SetBranchAddress("detectorIDs", &detectorIDs);    
-_tin->SetBranchAddress("elementIDs", &elementIDs);    
-_tin->SetBranchAddress("driftDistances", &driftDistances);    
-_tin->SetBranchAddress("tdcTimes", &tdcTimes);    
-_tin->SetBranchAddress("hitsInTime", &hitsInTime);    
+_tin->SetBranchAddress("detectorID", &detectorIDs);    
+_tin->SetBranchAddress("elementID", &elementIDs);    
+_tin->SetBranchAddress("driftDistance", &driftDistances);    
+_tin->SetBranchAddress("tdcTime", &tdcTimes);    
+//_tin->SetBranchAddress("hitsInTime", &hitsInTime);    
 
-_tin->SetBranchAddress("triggerDriftDistances", &triggerDriftDistances);    
-_tin->SetBranchAddress("triggerElementIDs", &triggerElementIDs);    
-_tin->SetBranchAddress("triggerTdcTimes", &triggerTdcTimes);    
-_tin->SetBranchAddress("triggerHitsInTime", &triggerHitsInTime);
+// _tin->SetBranchAddress("triggerDriftDistances", &triggerDriftDistances);    
+// _tin->SetBranchAddress("triggerElementIDs", &triggerElementIDs);    
+// _tin->SetBranchAddress("triggerTdcTimes", &triggerTdcTimes);    
+// _tin->SetBranchAddress("triggerHitsInTime", &triggerHitsInTime);
 
     segment = 0;
     isopen = 1;
